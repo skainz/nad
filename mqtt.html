@@ -1,0 +1,52 @@
+
+
+<html>
+<head>
+</head>
+<body>
+
+
+<script src="howler/howler.js"></script>
+<script>
+
+var sounds={"sparrow":new Howl({src: ['sounds/sparrow.mp3']}),
+	    "owl":new Howl({src: ['sounds/owl.mp3']}),};
+</script>
+
+
+
+<script src="mqttws31.js"></script>
+<script>
+
+client = new Paho.MQTT.Client(window.location.hostname, Number(8888), "/ws", "clientId");
+
+client.onConnectionLost = function (responseObject) {
+    console.log("Connection Lost: "+responseObject.errorMessage);
+}
+ 
+client.onMessageArrived = function (message) {
+//  console.log("Message Arrived: "+message.payloadString);
+  msg='owl';
+// data=JSON.parse(msg);
+//  console.log(data);
+   sounds[message.payloadString].play();
+
+}
+ 
+// Called when the connection is made
+function onConnect(){
+    console.log("Connected!");
+    
+    
+    client.subscribe("topic");
+}
+ 
+// Connect the client, providing an onConnect callback
+client.connect({
+    onSuccess: onConnect
+});
+
+</script>
+
+</body>
+</html>
