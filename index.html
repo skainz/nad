@@ -137,7 +137,7 @@ ctx.stroke();
 }
 
 var clientid="ID_"+Date.now();
-client = new Paho.MQTT.Client(window.location.hostname, Number(8081), "/ws", clientid);
+client = new Paho.MQTT.Client("zidpc9027.tu-graz.ac.at", Number(8081), "/ws", clientid);
 
 client.onConnectionLost = function (responseObject) {
     console.log("Connection Lost: "+responseObject.errorMessage);
