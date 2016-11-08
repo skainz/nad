@@ -6,11 +6,98 @@
 <body>
 
 
+
+<canvas id="myCanvas" width="80%" height="80%"></canvas>
+
+
+
 <script src="howler/howler.js"></script>
 <script>
 
-var sounds={"sparrow":new Howl({src: ['sounds/sparrow.mp3']}),
-	    "owl":new Howl({src: ['sounds/owl.mp3']}),};
+
+
+var frog1 = new Howl({
+  src: ['sounds/pond/7a.ogg'],
+  sprite: {
+    0:[1817,647],  
+    1: [2892, 499],
+    2: [5715, 717],
+    3: [6432, 530],
+    4: [8069,959]
+  }
+});
+var fm1={
+    "count":5,
+    "idx":0,
+    "sprites":frog1
+};
+
+
+var frog2 = new Howl({
+  src: ['sounds/pond/4b.ogg'],
+  sprite: {
+    0:[3355,613],  
+    1: [12532, 399],
+    2: [17303, 502],
+    3: [20049, 657]
+  }
+});
+
+var fm2={
+    "count":4,
+    "idx":0,
+    "sprites":frog2
+};
+
+
+
+var failsound = new Howl({
+  src: ['sounds/pond/Smashing-Yuri_Santana-1233262689.mp3'],
+  sprite: {
+    0:[0,1190]
+  }
+});
+
+var failsounddesc={
+    "count":1,
+    "idx":0,
+    "sprites":failsound
+};
+
+var startsound = new Howl({
+  src: ['sounds/pond/rocket.mp3'],
+  sprite: {
+    0:[0,1190]
+  }
+});
+
+var startsounddesc={
+    "count":1,
+    "idx":0,
+    "sprites":startsound
+};
+
+var loginsound = new Howl({
+  src: ['sounds/pond/open_door_1.mp3'],
+  sprite: {
+    0:[0,1190]
+  }
+});
+
+var loginsounddesc={
+    "count":1,
+    "idx":0,
+    "sprites":loginsound
+};
+
+
+
+
+
+
+
+var table={"login":loginsounddesc,"start":startsounddesc,"enqueue":fm2,"endok":fm1,"enderr":failsounddesc};
+
 </script>
 
 
@@ -18,7 +105,39 @@ var sounds={"sparrow":new Howl({src: ['sounds/sparrow.mp3']}),
 <script src="mqttws31.js"></script>
 <script>
 
-client = new Paho.MQTT.Client(window.location.hostname, Number(8888), "/ws", "clientId");
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+
+function play(o)
+{
+console.log("current idx:"+o['idx']);
+idx=o['idx'];
+console.log(o['sprites']);
+snd=o['sprites'];
+console.log(snd);
+snd.play(idx.toString());
+idx=(idx+1) % o['count'];
+
+o['idx']=idx;
+
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+function drawpixel(x,y,r)
+{
+
+ctx.beginPath();
+ctx.arc(x/256*1024,y,r,0,2*Math.PI);
+ctx.stroke();
+}
+
+var clientid="ID_"+Date.now();
+client = new Paho.MQTT.Client(window.location.hostname, Number(8081), "/ws", clientid);
 
 client.onConnectionLost = function (responseObject) {
     console.log("Connection Lost: "+responseObject.errorMessage);
@@ -26,10 +145,36 @@ client.onConnectionLost = function (responseObject) {
  
 client.onMessageArrived = function (message) {
 //  console.log("Message Arrived: "+message.payloadString);
-  msg='owl';
-// data=JSON.parse(msg);
-//  console.log(data);
-   sounds[message.payloadString].play();
+msg='owl';
+console.log(message.payloadString);
+
+var eventtype;
+  try {
+data=JSON.parse(message.payloadString);
+
+msg=data['event'];
+eventtype=data['type'];
+    } catch(ex)
+    {
+msg=message.payloadString;
+eventtype="s";
+    }
+console.log("msg:"+msg);
+
+//   sounds[message.payloadString].play();
+
+
+if (eventtype=="s")
+{
+if (table[msg])
+{
+play(table[msg]);
+}
+}
+
+
+ //  drawpixel(getRandomInt(0,255),getRandomInt(0,255),2);
+   
 
 }
  
@@ -47,6 +192,8 @@ client.connect({
 });
 
 </script>
+
+
 
 </body>
 </html>
