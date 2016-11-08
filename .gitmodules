@@ -1,0 +1,3 @@
+[submodule "sounds/pond"]
+	path = sounds/pond
+	url = http://git.tugraz.at/nad_sounds.git
