@@ -26,11 +26,44 @@ var frog1 = new Howl({
     4: [8069,959]
   }
 });
+
 var fm1={
     "count":5,
     "idx":0,
     "sprites":frog1
 };
+
+
+var knock1 = new Howl({
+  src: ['sounds/knock.mp3'],
+  sprite: {
+    0:[10,968]  
+  }
+});
+
+var knockm1={
+    "count":1,
+    "idx":0,
+    "sprites":knock1
+};
+
+
+
+var sendmail = new Howl({
+  src: ['sounds/flyby.mp3'],
+  sprite: {
+    0:[10,998]  
+  }
+});
+
+var sendmail_m={
+    "count":1,
+    "idx":0,
+    "sprites":sendmail
+};
+
+
+
 
 
 var frog2 = new Howl({
@@ -96,7 +129,10 @@ var loginsounddesc={
 
 
 
-var table={"login":loginsounddesc,"start":startsounddesc,"enqueue":fm2,"endok":fm1,"enderr":failsounddesc};
+var table={"sshlogin":knockm1,
+"login":loginsounddesc,
+"start":startsounddesc,"enqueue":fm2,"endok":fm1,"enderr":failsounddesc,
+"mailout":sendmail_m};
 
 </script>
 
